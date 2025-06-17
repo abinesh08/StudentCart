@@ -26,7 +26,6 @@
 | Persistence    | Spring Data JPA + MySQL            |
 | Security       | Spring Security (JWT-based login)  |
 | File Handling  | Multipart Uploads (PDF, DOCX etc.) |
-| Deployment     | (Optional: Docker or Fly.io)       |
 
 ---
 
