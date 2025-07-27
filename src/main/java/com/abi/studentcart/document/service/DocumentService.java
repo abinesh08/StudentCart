@@ -5,7 +5,9 @@ import com.abi.studentcart.document.dto.DocumentViewData;
 import com.abi.studentcart.document.mapper.DocumentMapper;
 import com.abi.studentcart.document.model.Document;
 import com.abi.studentcart.document.repository.DocumentRepository;
+import com.abi.studentcart.event.DocumentPrintedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DocumentService {
     private final DocumentRepository documentRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public List<DocumentResponse> uploadDocuments(String rollNumber, Long phoneNumber, int quantity
     , String description, List<MultipartFile> files) throws IOException{
@@ -63,6 +66,7 @@ public class DocumentService {
         document.setPrintedAt(LocalDateTime.now());
 
         Document updated= documentRepository.save(document);
+        applicationEventPublisher.publishEvent(new DocumentPrintedEvent(this, document.getRollNumber()));
         return DocumentMapper.toResponseDto(updated);
     }
     public DocumentViewData viewDocument(Long id){
